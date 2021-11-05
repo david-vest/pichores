@@ -1,0 +1,29 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "copyOnPi",
+            "type": "shell",
+            "command": "scp -r ${workspaceFolder} ${config:sshUser}@${config:sshEndpoint}:/home/pi/"
+        },
+        {
+            "label": "startOnPi",
+            "type": "shell",
+            "command": "ssh ${config:sshUser}@${config:sshEndpoint} 'python3 /home/pi/pichores/${fileBasename}'"
+        },
+        {
+            "label": "wait",
+            "type": "shell",
+            "command": "timeout 1000"
+        },
+        {
+            "label": "copyAndStartOnPi",
+            "dependsOrder": "sequence",
+            "dependsOn": ["copyOnPi", "startOnPi", "wait"]
+        },
+        {
+            "label": "cleanupOnPi",
+            "type": "shell",
+            "command": "ssh ${config:sshUser}@${config:sshEndpoint} 'pkill -9 python'"
+        },
+    ]    

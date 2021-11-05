@@ -1,51 +1,28 @@
 from digitalio import DigitalInOut, Direction, Pull
 import board
+import RPi.GPIO as GPIO
 
-class Input:
-    A = DigitalInOut(board.D5)
-    A.direction = Direction.INPUT
-    A.pull = Pull.UP
+class BonnetInput:
 
-    B = DigitalInOut(board.D6)
-    B.direction = Direction.INPUT
-    B.pull = Pull.UP
+    def setup_buttons(self):
+       buttons = {
+           "L": 27,
+           "R": 23,
+           "U": 17,
+           "D": 22,
+           "C": 4,
+           "A": 5,
+           "B": 6
+       } 
 
-    L = DigitalInOut(board.D27)
-    L.direction = Direction.INPUT
-    L.pull = Pull.UP
+       GPIO.setmode(GPIO.BCM)
 
-    R = DigitalInOut(board.D23)
-    R.direction = Direction.INPUT
-    R.pull = Pull.UP
-
-    U = DigitalInOut(board.D17)
-    U.direction = Direction.INPUT
-    U.pull = Pull.UP
-
-    D = DigitalInOut(board.D22)
-    D.direction = Direction.INPUT
-    D.pull = Pull.UP
-
-    C = DigitalInOut(board.D4)
-    C.direction = Direction.INPUT
-    C.pull = Pull.UP
-
-    buttons = {
-        "A": A,
-        "B": B,
-        "C": C,
-        "LEFT": L, 
-        "RIGHT": R,
-        "UP": U,
-        "DOWN": D,
-    }
+       for key in buttons:
+           GPIO.setup(buttons[key]), GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
     def __init__(self):
-        pass
+        setup_buttons()
 
-    def get_pressed(self):
-        pressed = []
-        for key in buttons:
-            if not key.value:
-                pressed.append(key)
-        return pressed
+    def register_callback(self, button_name, callback_func):
+        GPIO.add_event_detect(self.buttons[button_name], GPIO.FALLING, callback=callback_func, bouncetime=800)
+        
