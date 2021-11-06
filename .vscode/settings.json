@@ -1,6 +1,0 @@
-{
-    "sshUser": "pi",
-    "sshEndpoint": "192.168.0.176",
-    "location": "home/pi/oled_tests"
- }
- 
